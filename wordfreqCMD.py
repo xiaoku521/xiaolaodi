@@ -88,7 +88,10 @@ if os.path.exists('frequency.p'):
     d = pickle_idea.load_record('frequency.p')
 else:
     d = {}
-print(d) # d contains my word frequency history
+
+
+print(sort_in_descending_order(pickle_idea.dict2lst(d)))
+
 
 
 # 合并频率
