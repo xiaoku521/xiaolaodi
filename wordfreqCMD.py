@@ -16,7 +16,7 @@ def freq(fruit):
     # 水果的种类用f表示， 该种水果出现的次数用n表示
     for f in unique_fruit:
         n = flst.count(f) # 数出水果f种类的出现次数
-        result.append( (f,n) )
+        result.append( (f, n) )
 
     return result
 
@@ -24,7 +24,7 @@ def freq(fruit):
 
 def sort_in_descending_order(lst):#文件按数值降序排列
     import operator
-    lst2 = sorted(lst, reverse=True, key=operator.itemgetter(1))
+    lst2 = sorted(lst, reverse=True, key=lambda x: (x[1], x[0]))
     return lst2#函数尾
 
 
