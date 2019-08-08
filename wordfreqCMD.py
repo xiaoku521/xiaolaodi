@@ -1,3 +1,5 @@
+import collections
+
 def freq(fruit):
     '''
     功能： 把字符串转成列表。 目的是得到每个单词的频率。
@@ -10,22 +12,9 @@ def freq(fruit):
     
     fruit = fruit.lower() # 字母转小写
     flst = fruit.split()  # 字符串转成list
-    unique_fruit = list(set(flst)) # 找到水果种类
-
-    # 遍历每种水果， 统计每种水果出现的次数
-    # 水果的种类用f表示， 该种水果出现的次数用n表示
-    for f in unique_fruit:
-        n = flst.count(f) # 数出水果f种类的出现次数
-        result.append( (f, n) )
-
+    c = collections.Counter(flst)
+    result = c.most_common()
     return result
-
-
-
-def sort_in_descending_order(lst):#文件按数值降序排列
-    import operator
-    lst2 = sorted(lst, reverse=True, key=lambda x: (x[1], x[0]))
-    return lst2#函数尾
 
 
 def youdao_link(s):#有道链接
@@ -45,6 +34,11 @@ def remove_punctuation(s):#标点删除
     s = s.strip() # remove whitespaces in the beginning or in the end
     return s#函数尾
 
+
+def sort_in_descending_order(lst):#文件按数值降序排列
+    import operator
+    lst2 = sorted(lst, reverse=True, key=lambda x: (x[1], x[0]))
+    return lst2#函数尾
 
 
 ## main（程序入口）
@@ -78,8 +72,7 @@ else:
 
 s = remove_punctuation(s)
 L = freq(s)
-L2 = sort_in_descending_order( L )
-for x in L2:
+for x in L:
     print('%s\t%d\t%s' % (x[0], x[1], youdao_link(x[0])))#函数导出
 
 
