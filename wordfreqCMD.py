@@ -29,16 +29,51 @@ def file2str(fname):#文件转字符
     return s#函数尾
 
 
-def remove_punctuation(s):#标点删除
-    s = s.replace(',','').replace('.','').replace('?','')#replace函数
-    s = s.strip() # remove whitespaces in the beginning or in the end
-    return s#函数尾
+##def remove_punctuation(s):#标点删除
+##    s = s.replace(',','').replace('.','').replace('?','')#replace函数
+##    s = s.strip() # remove whitespaces in the beginning or in the end
+##    return s#函数尾
+
+
+import string
+def remove_punctuation(s):
+    special_characters = '.,?!:;#()"' # 把里面的字符都去掉
+    for c in special_characters:
+        s = s.replace(c, ' ') # 防止出现把 apple,apple 移掉逗号后变成 appleapple 情况
+    s = s.replace('--', ' ')
+    s = s.strip() # 去除前后的空格
+    
+    if '\'' in s:
+        n = len(s)
+        t = '' # 用来收集我需要保留的字符
+        for i in range(n):
+            if s[i] == '\'':
+                i_is_ok = i - 1 >= 0 and i + 1 < n
+                if i_is_ok and s[i-1] in string.ascii_letters and s[i+1] in string.ascii_letters:
+                    t += s[i]
+            else:
+                t += s[i]
+        return t
+    else:
+        return s
 
 
 def sort_in_descending_order(lst):#文件按数值降序排列
     import operator
     lst2 = sorted(lst, reverse=True, key=lambda x: (x[1], x[0]))
     return lst2#函数尾
+
+
+def make_html_page(lst, fname):
+    s = ''
+    count = 1
+    for x in lst:
+        # <a href="">word</a>
+        s += '<p>%d <a href="%s">%s</a> (%d)</p>' % (count, youdao_link(x[0]), x[0], x[1])
+        count += 1
+    f = open(fname, 'w')
+    f.write(s)
+    f.close()
 
 
 ## main（程序入口）
@@ -72,8 +107,11 @@ else:
 
 s = remove_punctuation(s)
 L = freq(s)
-for x in L:
+for x in sort_in_descending_order(L):
     print('%s\t%d\t%s' % (x[0], x[1], youdao_link(x[0])))#函数导出
+
+
+make_html_page(sort_in_descending_order(L), 'result.html')
 
 
 print('\nHistory:\n')
