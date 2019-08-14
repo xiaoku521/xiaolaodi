@@ -1,4 +1,8 @@
 import collections
+import string
+import operator
+import os, sys # 引入模块sys，因为我要用里面的sys.argv列表中的信息来读取命令行参数。
+import pickle_idea
 
 def freq(fruit):
     '''
@@ -17,26 +21,19 @@ def freq(fruit):
     return result
 
 
-def youdao_link(s):#有道链接
-    link = 'http://youdao.com/w/eng/' + s + '/#keyfrom=dict2.index'#网址
-    return link#函数尾
+def youdao_link(s): # 有道链接
+    link = 'http://youdao.com/w/eng/' + s + '/#keyfrom=dict2.index'# 网址
+    return link
 
 
 def file2str(fname):#文件转字符
-    f = open(fname)#打开
-    s = f.read()#读取
-    f.close()#关闭
-    return s#函数尾
+    f = open(fname) #打开
+    s = f.read()    #读取
+    f.close()       #关闭
+    return s
 
 
-##def remove_punctuation(s):#标点删除
-##    s = s.replace(',','').replace('.','').replace('?','')#replace函数
-##    s = s.strip() # remove whitespaces in the beginning or in the end
-##    return s#函数尾
-
-
-import string
-def remove_punctuation(s):
+def remove_punctuation(s): # 这里是s是形参 (parameter)。函数被调用时才给s赋值。
     special_characters = '.,?!:;#()"' # 把里面的字符都去掉
     for c in special_characters:
         s = s.replace(c, ' ') # 防止出现把 apple,apple 移掉逗号后变成 appleapple 情况
@@ -46,7 +43,7 @@ def remove_punctuation(s):
     if '\'' in s:
         n = len(s)
         t = '' # 用来收集我需要保留的字符
-        for i in range(n):
+        for i in range(n): # 只有单引号前后都有英文字符，才保留
             if s[i] == '\'':
                 i_is_ok = i - 1 >= 0 and i + 1 < n
                 if i_is_ok and s[i-1] in string.ascii_letters and s[i+1] in string.ascii_letters:
@@ -58,13 +55,15 @@ def remove_punctuation(s):
         return s
 
 
-def sort_in_descending_order(lst):#文件按数值降序排列
-    import operator
+def sort_in_descending_order(lst):# 单词按频率降序排列
     lst2 = sorted(lst, reverse=True, key=lambda x: (x[1], x[0]))
-    return lst2#函数尾
+    return lst2
 
 
 def make_html_page(lst, fname):
+    '''
+    功能：把lst的信息存到fname中，以html格式。
+    '''
     s = ''
     count = 1
     for x in lst:
@@ -77,42 +76,24 @@ def make_html_page(lst, fname):
 
 
 ## main（程序入口）
-
-
-import sys#不太懂
-import pickle_idea
-import os
-
-
-#print(sys.argv)
-
 num = len(sys.argv)
 
-#print(num)
-
-if num == 1:
+if num == 1: # 从键盘读入字符串
     s = input()
-
-elif num == 2:
+elif num == 2: # 从文件读入字符串
     fname = sys.argv[1]
     s = file2str(fname)
-
 else:
     print('I can accept at most 2 arguments.')
-    sys.exit()#不太懂
+    sys.exit()# 结束程序运行， 下面的代码不会被执行了。
 
-#print(s)
-
-
-
-s = remove_punctuation(s)
+s = remove_punctuation(s) # 这里是s是实参(argument)，里面有值
 L = freq(s)
 for x in sort_in_descending_order(L):
     print('%s\t%d\t%s' % (x[0], x[1], youdao_link(x[0])))#函数导出
 
-
-make_html_page(sort_in_descending_order(L), 'result.html')
-
+# 把频率的结果放result.html中
+make_html_page(sort_in_descending_order(L), 'result.html') 
 
 print('\nHistory:\n')
 if os.path.exists('frequency.p'):
@@ -120,25 +101,12 @@ if os.path.exists('frequency.p'):
 else:
     d = {}
 
-
 print(sort_in_descending_order(pickle_idea.dict2lst(d)))
-
-
 
 # 合并频率
 lst_history = pickle_idea.dict2lst(d)
 d = pickle_idea.merge_frequency(L, lst_history)
 pickle_idea.save_frequency_to_pickle(d, 'frequency.p')
-
-
-
-
-
-
-
-
-
-
 
 
 
