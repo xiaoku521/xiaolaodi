@@ -76,37 +76,38 @@ def make_html_page(lst, fname):
 
 
 ## main（程序入口）
-num = len(sys.argv)
+if __name__ == '__main__':
+    num = len(sys.argv)
 
-if num == 1: # 从键盘读入字符串
-    s = input()
-elif num == 2: # 从文件读入字符串
-    fname = sys.argv[1]
-    s = file2str(fname)
-else:
-    print('I can accept at most 2 arguments.')
-    sys.exit()# 结束程序运行， 下面的代码不会被执行了。
+    if num == 1: # 从键盘读入字符串
+        s = input()
+    elif num == 2: # 从文件读入字符串
+        fname = sys.argv[1]
+        s = file2str(fname)
+    else:
+        print('I can accept at most 2 arguments.')
+        sys.exit()# 结束程序运行， 下面的代码不会被执行了。
 
-s = remove_punctuation(s) # 这里是s是实参(argument)，里面有值
-L = freq(s)
-for x in sort_in_descending_order(L):
-    print('%s\t%d\t%s' % (x[0], x[1], youdao_link(x[0])))#函数导出
+    s = remove_punctuation(s) # 这里是s是实参(argument)，里面有值
+    L = freq(s)
+    for x in sort_in_descending_order(L):
+        print('%s\t%d\t%s' % (x[0], x[1], youdao_link(x[0])))#函数导出
 
-# 把频率的结果放result.html中
-make_html_page(sort_in_descending_order(L), 'result.html') 
+    # 把频率的结果放result.html中
+    make_html_page(sort_in_descending_order(L), 'result.html') 
 
-print('\nHistory:\n')
-if os.path.exists('frequency.p'):
-    d = pickle_idea.load_record('frequency.p')
-else:
-    d = {}
+    print('\nHistory:\n')
+    if os.path.exists('frequency.p'):
+        d = pickle_idea.load_record('frequency.p')
+    else:
+        d = {}
 
-print(sort_in_descending_order(pickle_idea.dict2lst(d)))
+    print(sort_in_descending_order(pickle_idea.dict2lst(d)))
 
-# 合并频率
-lst_history = pickle_idea.dict2lst(d)
-d = pickle_idea.merge_frequency(L, lst_history)
-pickle_idea.save_frequency_to_pickle(d, 'frequency.p')
+    # 合并频率
+    lst_history = pickle_idea.dict2lst(d)
+    d = pickle_idea.merge_frequency(L, lst_history)
+    pickle_idea.save_frequency_to_pickle(d, 'frequency.p')
 
 
 

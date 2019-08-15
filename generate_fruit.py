@@ -1,6 +1,6 @@
 lst = [ 'apple', 'orange', 'banana' ]
 
-num = 300 # 多少个水果
+num = 6 # 多少个水果
 
 import random
 s = ''
